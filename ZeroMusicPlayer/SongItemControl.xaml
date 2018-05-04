@@ -5,12 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ZeroMusicPlayer"
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="800" Width="800" Height="80" HorizontalContentAlignment="Left">
-    <Grid Background="White">
-        <Rectangle Fill="#FFEBECED" HorizontalAlignment="Left" Height="2" VerticalAlignment="Bottom" Width="800" StrokeThickness="0"/>
-        <Label Content="{Binding Path=SongName, ElementName=SongItem}" HorizontalAlignment="Left" Height="30" Margin="100,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" Background="White" Foreground="#FF616161"/>
-        <Ellipse Height="50" Width="50" Fill="#FF31DED6" Margin="30,15,0,15" HorizontalAlignment="Left"/>
-        <Label Content="{Binding Path=Author, ElementName=SongItem}" HorizontalAlignment="Right" Height="30" Margin="0,20,25,30" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" FontWeight="Bold" Background="White" Foreground="#FFA8A8A8" HorizontalContentAlignment="Right"/>
-        <Label Content="{Binding Path=Time, ElementName=SongItem}" HorizontalAlignment="Right" Height="25" Margin="0,45,25,10" VerticalAlignment="Center" FontFamily="Arial" FontSize="10" FontWeight="Bold" Background="White" Foreground="#FFC3C3C3" HorizontalContentAlignment="Right"/>
+             d:DesignHeight="80" d:DesignWidth="750" Width="750" Height="80" HorizontalContentAlignment="Left">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Grid}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Background" Value="White"></Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFE6E6E6"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Rectangle Fill="#FFEBECED" HorizontalAlignment="Left" Height="2" VerticalAlignment="Bottom" Width="750" StrokeThickness="0"/>
+        <Label Content="{Binding Path=SongName, ElementName=SongItem}" HorizontalAlignment="Left" Height="30" Margin="100,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="#FF616161"/>
+        <Ellipse Height="50" Width="50" Margin="30,15,0,15" HorizontalAlignment="Left" Fill="{Binding Path=Icon, ElementName=SongItem}"/>
+        <Label Content="{Binding Path=Author, ElementName=SongItem}" HorizontalAlignment="Right" Height="30" Margin="0,20,25,30" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" FontWeight="Bold" Foreground="#FFA8A8A8" HorizontalContentAlignment="Right"/>
+        <Label Content="{Binding Path=Time, ElementName=SongItem}" HorizontalAlignment="Right" Height="25" Margin="0,45,25,10" VerticalAlignment="Center" FontFamily="Arial" FontSize="10" FontWeight="Bold" Foreground="#FFC3C3C3" HorizontalContentAlignment="Right"/>
     </Grid>
 </UserControl>

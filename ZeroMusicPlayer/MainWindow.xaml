@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZeroMusicPlayer"
+        xmlns:Model="clr-namespace:ZeroMusicPlayer.Model"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000" ResizeMode="CanMinimize" WindowStyle="None">
     <Window.Resources>
@@ -17,30 +18,60 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
+
+        <HierarchicalDataTemplate DataType="{x:Type Model:DirectoryItem}"
+                                  ItemsSource="{Binding Items}">
+            <Label Content="{Binding Path=Name}" ToolTip="{Binding Path=Path}" Foreground="#FF595959" FontFamily="Arial" FontWeight="Bold" Height="Auto" HorizontalContentAlignment="Left" Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+        </HierarchicalDataTemplate>
+
+        <DataTemplate DataType="{x:Type Model:FileItem}">
+            <Label Content="{Binding Path=Name}" ToolTip="{Binding Path=Path}" Foreground="#FF767676" FontFamily="Arial" Height="Auto" HorizontalContentAlignment="Left" Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+        </DataTemplate>
+
     </Window.Resources>
 
     <Grid>
-        <StackPanel Width="200" Background="#FF0288D1" HorizontalAlignment="Left" Margin="0,52,0,0">
+        <StackPanel Width="250" Background="#FF0288D1" HorizontalAlignment="Left" Margin="0,52,0,0">
             <Button>Favorites</Button>
             <Button>Playlists</Button>
+            
+            <TreeView x:Name="Files" HorizontalAlignment="Left" Height="347" Width="250" ItemsSource="{Binding}" FontFamily="Arial" BorderThickness="0" Background="White" Foreground="#FF9E9E9E" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItemChanged="Files_SelectedItemChanged" Padding="0">
+
+                <TreeView.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                      Color="#FFCCE8FF" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                      Color="#FFD9D9D9" />
+
+                    <Style TargetType="TreeViewItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFE5F3FF"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    
+                </TreeView.Resources>
+
+            </TreeView>
         </StackPanel>
 
-        <ScrollViewer Width="800" Height="548" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,52,0,0" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Width="800">
-                <local:SongItemControl SongName="梦灯笼" Author="RADWIMPS" Time="2:11"/>
+        <ScrollViewer Width="750" Height="548" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,52,0,0" VerticalScrollBarVisibility="Hidden">
+            <StackPanel x:Name="SongsPanel" Width="750">
+                <!--<local:SongItemControl SongName="梦灯笼" Author="RADWIMPS" Time="2:11"/>
                 <local:SongItemControl SongName="三叶の通学" Author="RADWIMPS" Time="1:08"/>
                 <local:SongItemControl SongName="糸守高校" Author="RADWIMPS" Time="2:33"/>
                 <local:SongItemControl SongName="はじめての、东京" Author="RADWIMPS" Time="2:11"/>
                 <local:SongItemControl SongName="憧れカフェ" Author="RADWIMPS" Time="2:11"/>
                 <local:SongItemControl SongName="奥寺先辈のテーマ" Author="RADWIMPS" Time="2:11"/>
                 <local:SongItemControl SongName="ふたりの异変" Author="RADWIMPS" Time="2:11"/>
-                <local:SongItemControl SongName="前前前世 (movie ver.)" Author="RADWIMPS" Time="2:11"/>
+                <local:SongItemControl SongName="前前前世 (movie ver.)" Author="RADWIMPS" Time="2:11"/>-->
                 <Label Height="50" />
             </StackPanel>
         </ScrollViewer>
 
 
-        <Grid HorizontalAlignment="Center" Height="60" VerticalAlignment="Bottom" Width="800" Background="#E581D4FA" Margin="200,0,0,0">
+        <Grid HorizontalAlignment="Center" Height="60" VerticalAlignment="Bottom" Width="750" Background="#E564B5F6" Margin="250,0,0,0">
             <ProgressBar HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Value="37" Foreground="White" BorderThickness="0"/>
             <Button HorizontalAlignment="Left" Height="18" Margin="64,0,0,0" VerticalAlignment="Center" Width="15" BorderBrush="{x:Null}" BorderThickness="0">
                 <Button.Background>

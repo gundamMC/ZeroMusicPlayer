@@ -39,9 +39,16 @@ namespace ZeroMusicPlayer
             set { SetValue(TimeProperty, value); }
         }
 
+        public ImageBrush Icon
+        {
+            get { return (ImageBrush)GetValue(IconProperty); }
+            set { SetValue(IconProperty, value); }
+        }
+
         public static readonly DependencyProperty SongNameProperty = DependencyProperty.Register("SongName", typeof(String), typeof(SongItemControl), new PropertyMetadata(""));
         public static readonly DependencyProperty AuthorProperty = DependencyProperty.Register("Author", typeof(String), typeof(SongItemControl), new PropertyMetadata(""));
         public static readonly DependencyProperty TimeProperty = DependencyProperty.Register("Time", typeof(String), typeof(SongItemControl), new PropertyMetadata(""));
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(ImageBrush), typeof(SongItemControl), new PropertyMetadata(new ImageBrush()));
 
         public SongItemControl()
         {
