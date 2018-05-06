@@ -73,12 +73,14 @@ namespace ZeroMusicPlayer
 
             foreach (FileInfo file in dir.GetFiles())
             {
-                if (file.Extension == ".db")
+                if (!SupportedAudio.Extensions.Contains(file.Extension.ToLower()))
                     continue;
 
+                
+                
                 items.Add(new FileItem
                 {
-                    Name = file.Name,
+                    Name = file.Name.Replace(file.Extension, ""),
                     Path = file.FullName
                 });
             }
@@ -105,33 +107,54 @@ namespace ZeroMusicPlayer
             {
                 SongsPanel.Children.Clear();
 
+
                 foreach (Item item in ((DirectoryItem)Files.SelectedItem).Items)
                 {
                     if(item is FileItem)
                     {
-                        ShellFile shellFile = ShellFile.FromFilePath(item.Path);
-                        using (Bitmap shellThumb = shellFile.Thumbnail.ExtraLargeBitmap)
+                        using (TagLib.File fileTags = TagLib.File.Create(item.Path))
                         {
-                            IntPtr hBitMap = shellThumb.GetHbitmap();
-                            ImageBrush image = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(hBitMap,
-                                                                                    IntPtr.Zero,
-                                                                                    Int32Rect.Empty,
-                                                                                    BitmapSizeOptions.FromEmptyOptions()));
-                            image.Freeze();
-                            SongsPanel.Children.Add(new SongItemControl() { SongName = item.Name, Icon = image, Path = item.Path, Time = GetDuration(item.Path) });
+                            SongItemControl tmp = new SongItemControl()
+                            {
+                                SongName = (String.IsNullOrEmpty(fileTags.Tag.Title)) ? item.Name : fileTags.Tag.Title,
+                                Path = item.Path,
+                                Time = GetDuration(item.Path),
+                                Author = (fileTags.Tag.Artists.Count() > 0) ? fileTags.Tag.Artists[0] : "UNKNOWN"
+                            };
 
-                            DeleteObject(hBitMap); // prevent memory leak from Imaging.CreateBitmapSourceFromHBitmap
+                            using (ShellFile shellFile = ShellFile.FromFilePath(item.Path))
+                            {
+                                using (Bitmap shellThumb = shellFile.Thumbnail.ExtraLargeBitmap)
+                                {
+                                    IntPtr hBitMap = shellThumb.GetHbitmap();
+                                    try
+                                    {
 
+                                        var bs = Imaging.CreateBitmapSourceFromHBitmap(hBitMap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                        bs.Freeze();
+                                        var image = new ImageBrush(bs);
+                                        image.Freeze();
+                                        tmp.Icon = image;
+                                    }
+                                    finally
+                                    {
+                                        DeleteObject(hBitMap); // prevent memory leak from Imaging.CreateBitmapSourceFromHBitmap
+                                    }
+
+
+                                }
+                            }
+
+                            SongsPanel.Children.Add(tmp);
                         }
-                        shellFile.Dispose();
                     }
                 }
 
                 SongsPanel.Children.Add(new Label() { Height = 50 });
-            }
 
-            // force garbage collect
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+                // force garbage collect
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+            }
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)

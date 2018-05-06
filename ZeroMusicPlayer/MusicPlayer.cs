@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace ZeroMusicPlayer
 {
@@ -18,17 +19,42 @@ namespace ZeroMusicPlayer
         private int PlayMode = 0;
         // 0 for loop, 1 for shuffle, 2 for single
 
-        private Boolean CalledByPlayNext = false;
+        private Boolean StoppedByUser = false;
+
+        private Timer timer = new Timer() { Interval = 1000 };
 
         public MusicPlayer()
         {
             WavePlayer.PlaybackStopped += OnPlaybackStopped;
+            timer.Elapsed += Timer_Elapsed;
         }
 
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if(AudioFile != null)
+            {
+                String time = FormatTimeSpan(AudioFile.TotalTime.Subtract(AudioFile.CurrentTime));
+                Double percent = ((double)(AudioFile.CurrentTime.TotalSeconds) / (double)(AudioFile.TotalTime.TotalSeconds)) * 100;
+
+                App.Current.Dispatcher.Invoke(() => {
+                    ((MainWindow)App.Current.MainWindow).TimeLeft.Content = time;
+                    ((MainWindow)App.Current.MainWindow).TimeProgressBar.Value = percent;
+                    });
+            }
+        }
 
         public static string FormatTimeSpan(TimeSpan ts)
         {
             return string.Format("{0:D2}:{1:D2}", (int)ts.TotalMinutes, ts.Seconds);
+        }
+
+        private void StopPlayBack()
+        {
+            if (WavePlayer.PlaybackState != PlaybackState.Stopped)
+            {
+                StoppedByUser = true;
+                WavePlayer.Stop();
+            }
         }
 
         public void PlayNext()
@@ -36,11 +62,7 @@ namespace ZeroMusicPlayer
             if (Queue.Count() < 1)
                 return;
 
-            if (WavePlayer.PlaybackState == PlaybackState.Playing)
-            {
-                CalledByPlayNext = true;
-                WavePlayer.Stop();
-            }
+            StopPlayBack();
 
             SongItem song = GetNext();
             AudioFile = new AudioFileReader(song.Path);
@@ -48,6 +70,20 @@ namespace ZeroMusicPlayer
             WavePlayer.Init(AudioFile);
             WavePlayer.Play();
 
+            timer.Start();
+
+        }
+
+        public void PlayNow(SongItem song)
+        {
+            StopPlayBack();
+
+            AudioFile = new AudioFileReader(song.Path);
+
+            WavePlayer.Init(AudioFile);
+            WavePlayer.Play();
+
+            timer.Start();
         }
 
         private SongItem GetNext()
@@ -72,20 +108,6 @@ namespace ZeroMusicPlayer
             }
 
             return null;
-        }
-
-        public void PlayNow(SongItem song)
-        {
-            if (WavePlayer.PlaybackState == PlaybackState.Playing)
-            {
-                CalledByPlayNext = true;
-                WavePlayer.Stop();
-            }
-
-            AudioFile = new AudioFileReader(song.Path);
-
-            WavePlayer.Init(AudioFile);
-            WavePlayer.Play();
         }
 
         public void Pause()
@@ -116,12 +138,13 @@ namespace ZeroMusicPlayer
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
-            AudioFile.Dispose();
-            AudioFile = null;
+            timer.Stop();
+            //AudioFile.Dispose();
+            //AudioFile = null;
 
-            if (CalledByPlayNext)
+            if (StoppedByUser)
             {
-                CalledByPlayNext = false;
+                StoppedByUser = false;
             }
             else
             {

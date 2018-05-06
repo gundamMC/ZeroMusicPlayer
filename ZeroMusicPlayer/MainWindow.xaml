@@ -63,7 +63,7 @@
 
 
         <Grid HorizontalAlignment="Center" Height="60" VerticalAlignment="Bottom" Width="750" Background="#E564B5F6" Margin="250,0,0,0">
-            <ProgressBar HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Value="37" Foreground="White" BorderThickness="0"/>
+            <ProgressBar x:Name="TimeProgressBar" HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Foreground="White" BorderThickness="0"/>
             <Button x:Name="PlayButton" HorizontalAlignment="Left" Height="18" Margin="64,0,0,0" VerticalAlignment="Center" Width="15" BorderBrush="{x:Null}" BorderThickness="0" Click="PlayButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/play.png"/>
@@ -74,7 +74,7 @@
                     <ImageBrush ImageSource="Resources/volume.png"/>
                 </Button.Background>
             </Button>
-            <Label Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
+            <Label x:Name="TimeLeft" Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
 
         </Grid>
 
