@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Shell;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,11 +27,26 @@ namespace ZeroMusicPlayer
     public partial class MainWindow : Window
     {
 
+        private MusicPlayer Player = new MusicPlayer();
+        public void AddSong(SongItem song)
+        {
+            Player.Add(song);
+        }
+        SongItemControl SelectedSongControl = null;
+        public void SetSelectedSong(SongItemControl control)
+        {
+            if (SelectedSongControl != null)
+                SelectedSongControl.Selected = false;
+            control.Selected = true;
+
+            SelectedSongControl = control;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
 
-            var items = GetItems(@"your path here");
+            var items = GetItems(@"\\excalibur\music");
 
             Files.DataContext = items;
         }
@@ -57,6 +73,9 @@ namespace ZeroMusicPlayer
 
             foreach (FileInfo file in dir.GetFiles())
             {
+                if (file.Extension == ".db")
+                    continue;
+
                 items.Add(new FileItem
                 {
                     Name = file.Name,
@@ -70,15 +89,20 @@ namespace ZeroMusicPlayer
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
 
+        private static String GetDuration(string fileName)
+        {
+            MediaFoundationReader wf = new MediaFoundationReader(fileName);
+            String result = MusicPlayer.FormatTimeSpan(wf.TotalTime);
+            wf.Dispose();
+            return result;
+        }
+
         private void Files_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             // TODO: Multithread for loading the icons
 
-            Console.WriteLine(((Item)Files.SelectedItem).Name);
-
             if(Files.SelectedItem is DirectoryItem)
             {
-
                 SongsPanel.Children.Clear();
 
                 foreach (Item item in ((DirectoryItem)Files.SelectedItem).Items)
@@ -93,9 +117,8 @@ namespace ZeroMusicPlayer
                                                                                     IntPtr.Zero,
                                                                                     Int32Rect.Empty,
                                                                                     BitmapSizeOptions.FromEmptyOptions()));
-
                             image.Freeze();
-                            SongsPanel.Children.Add(new SongItemControl() { SongName = item.Name, Icon = image });
+                            SongsPanel.Children.Add(new SongItemControl() { SongName = item.Name, Icon = image, Path = item.Path, Time = GetDuration(item.Path) });
 
                             DeleteObject(hBitMap); // prevent memory leak from Imaging.CreateBitmapSourceFromHBitmap
 
@@ -109,6 +132,11 @@ namespace ZeroMusicPlayer
 
             // force garbage collect
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path});
         }
     }
 }
