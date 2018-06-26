@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -99,62 +100,94 @@ namespace ZeroMusicPlayer
             return result;
         }
 
+        Thread IconThread;
+
         private void Files_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            // TODO: Multithread for loading the icons
+            List<SongItemControl> SongItems = new List<SongItemControl>();
 
-            if(Files.SelectedItem is DirectoryItem)
+            if (IconThread != null && IconThread.IsAlive)
+                IconThread.Abort();
+
+            IconThread = new Thread(new ThreadStart(() => LoadSongInfo(SongItems)));
+
+            if (Files.SelectedItem is DirectoryItem)
             {
                 SongsPanel.Children.Clear();
 
 
                 foreach (Item item in ((DirectoryItem)Files.SelectedItem).Items)
                 {
-                    if(item is FileItem)
+
+                    if (item is FileItem)
                     {
-                        using (TagLib.File fileTags = TagLib.File.Create(item.Path))
+                        SongItemControl tmp = new SongItemControl()
                         {
-                            SongItemControl tmp = new SongItemControl()
-                            {
-                                SongName = (String.IsNullOrEmpty(fileTags.Tag.Title)) ? item.Name : fileTags.Tag.Title,
-                                Path = item.Path,
-                                Time = GetDuration(item.Path),
-                                Author = (fileTags.Tag.Artists.Count() > 0) ? fileTags.Tag.Artists[0] : "UNKNOWN"
-                            };
+                            SongName = item.Name,
+                            Path = item.Path
+                        };
 
-                            using (ShellFile shellFile = ShellFile.FromFilePath(item.Path))
-                            {
-                                using (Bitmap shellThumb = shellFile.Thumbnail.ExtraLargeBitmap)
-                                {
-                                    IntPtr hBitMap = shellThumb.GetHbitmap();
-                                    try
-                                    {
-
-                                        var bs = Imaging.CreateBitmapSourceFromHBitmap(hBitMap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                                        bs.Freeze();
-                                        var image = new ImageBrush(bs);
-                                        image.Freeze();
-                                        tmp.Icon = image;
-                                    }
-                                    finally
-                                    {
-                                        DeleteObject(hBitMap); // prevent memory leak from Imaging.CreateBitmapSourceFromHBitmap
-                                    }
-
-
-                                }
-                            }
-
-                            SongsPanel.Children.Add(tmp);
-                        }
+                        SongsPanel.Children.Add(tmp);
+                        SongItems.Add(tmp);
                     }
                 }
 
                 SongsPanel.Children.Add(new Label() { Height = 50 });
 
-                // force garbage collect
-                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+                IconThread.Start();
             }
+        }
+
+        private void LoadSongInfo(List<SongItemControl> items)
+        {
+
+            foreach(SongItemControl item in items)
+            {
+                String time = GetDuration(item.Path);
+
+                String SongName;
+                String Author = "UNKNOW";
+
+
+                using (TagLib.File fileTags = TagLib.File.Create(item.Path))
+                {
+                    SongName = fileTags.Tag.Title;
+                    if (fileTags.Tag.Performers.Count() > 0)
+                        Author = fileTags.Tag.Performers[0];
+                }
+
+                using (ShellFile shellFile = ShellFile.FromFilePath(item.Path))
+                {
+                    using (Bitmap shellThumb = shellFile.Thumbnail.ExtraLargeBitmap)
+                    {
+                        IntPtr hBitMap = shellThumb.GetHbitmap();
+                        try
+                        {
+                            var bs = Imaging.CreateBitmapSourceFromHBitmap(hBitMap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                            bs.Freeze();
+                            var image = new ImageBrush(bs);
+                            image.Freeze();
+                            item.Dispatcher.Invoke(() => {
+                                item.Icon = image;
+                                item.Time = time;
+                                if (!String.IsNullOrWhiteSpace(SongName))
+                                    item.SongName = SongName;
+                                item.Author = Author;
+                            });
+                        }
+                        finally
+                        {
+                            DeleteObject(hBitMap); // prevent memory leak from Imaging.CreateBitmapSourceFromHBitmap
+                        }
+                    }
+                }
+            }
+
+            items.Clear();
+
+            // force garbage collect
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
