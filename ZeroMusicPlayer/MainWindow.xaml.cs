@@ -94,10 +94,18 @@ namespace ZeroMusicPlayer
 
         private static String GetDuration(string fileName)
         {
-            MediaFoundationReader wf = new MediaFoundationReader(fileName);
-            String result = MusicPlayer.FormatTimeSpan(wf.TotalTime);
-            wf.Dispose();
-            return result;
+            try
+            {
+                MediaFoundationReader wf = new MediaFoundationReader(fileName);
+                String result = MusicPlayer.FormatTimeSpan(wf.TotalTime);
+                wf.Dispose();
+                return result;
+            }
+            catch
+            {
+                return "UNKNOW";
+            }
+            
         }
 
         Thread IconThread;
