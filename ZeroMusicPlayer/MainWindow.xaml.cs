@@ -46,7 +46,7 @@ namespace ZeroMusicPlayer
         {
             InitializeComponent();
 
-            var items = GetItems(@"\\excalibur\music");
+            var items = GetItems(@"D:\youxi\osu\Songs");
 
             Files.DataContext = items;
         }
@@ -91,12 +91,17 @@ namespace ZeroMusicPlayer
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
 
-        private static String GetDuration(string fileName)
+        private static String GetDuration(string fileName) 
         {
-            MediaFoundationReader wf = new MediaFoundationReader(fileName);
-            String result = MusicPlayer.FormatTimeSpan(wf.TotalTime);
-            wf.Dispose();
-            return result;
+            try {
+                MediaFoundationReader wf = new MediaFoundationReader(fileName);
+                String result = MusicPlayer.FormatTimeSpan(wf.TotalTime);
+                wf.Dispose();
+                return result;
+            } catch (Exception e) {
+                
+            }
+            return null;
         }
 
         private void Files_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
