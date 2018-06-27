@@ -122,6 +122,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\close.png" />
     <Content Include="Resources\play.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

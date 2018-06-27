@@ -41,7 +41,9 @@ namespace ZeroMusicPlayer
         {
             InitializeComponent();
 
-            var items = GetItems(@"\\excalibur\music");
+            //原:@"\\excalibur\music"
+            //抱歉懒得改回去了【雾 快做设置吧 #乱打注释感觉会被打
+            var items = GetItems(@"D:\youxi\osu\Songs");
 
             Files.DataContext = items;
         }
@@ -195,6 +197,10 @@ namespace ZeroMusicPlayer
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path});
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e) {
+            App.Current.Shutdown();
         }
     }
 }
