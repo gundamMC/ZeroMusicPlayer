@@ -38,6 +38,10 @@ namespace ZeroMusicPlayer {
                     ((MainWindow)App.Current.MainWindow).TimeProgressBar.Value = percent;
                     });
             }
+            else // AudioFile == null
+            {
+                timer.Stop();
+            }
         }
 
         public static string FormatTimeSpan(TimeSpan ts)
@@ -74,7 +78,7 @@ namespace ZeroMusicPlayer {
         public void PlayNow(SongItem song)
         {
             StopPlayBack();
-
+            
             AudioFile = new AudioFileReader(song.Path);
 
             WavePlayer.Init(AudioFile);
@@ -88,12 +92,10 @@ namespace ZeroMusicPlayer {
             if (Queue.Count < 1)
                 return null;
 
-            SongItem result;
-
             switch (PlayMode)
             {
                 case 0:
-                    result = Queue.First();
+                    SongItem result = Queue.First();
                     Queue.RemoveFirst();
                     Queue.AddLast(result);
                     return result;
@@ -135,9 +137,6 @@ namespace ZeroMusicPlayer {
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
-            timer.Stop();
-            //AudioFile.Dispose();
-            //AudioFile = null;
 
             if (StoppedByUser)
             {
@@ -147,18 +146,6 @@ namespace ZeroMusicPlayer {
             {
                 PlayNext();
             }
-
-        }
-
-        public String test()
-        {
-            String result = "";
-            foreach(SongItem i in Queue)
-            {
-                result += i.Path + "\n";
-            }
-
-            return result;
         }
 
     }
