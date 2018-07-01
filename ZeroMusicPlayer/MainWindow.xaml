@@ -8,75 +8,97 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000" ResizeMode="CanMinimize" WindowStyle="None">
     <Window.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="#0288D1"/>
-            <Setter Property="BorderBrush" Value="#FF29B6F6"/>
-            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-            <Setter Property="Height" Value="100"/>
-            <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="HoverButtonDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <HierarchicalDataTemplate DataType="{x:Type Model:DirectoryItem}"
-                                  ItemsSource="{Binding Items}">
-            <Label Content="{Binding Path=Name}" ToolTip="{Binding Path=Path}" Foreground="#FF595959" FontFamily="Arial" FontWeight="Bold" Height="Auto" HorizontalContentAlignment="Left" Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
-        </HierarchicalDataTemplate>
+            <!-- Custom Tabitem -->
+            <Style TargetType="{x:Type TabItem}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabItem}">
+                            <ContentPresenter ContentSource="Header"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <DataTemplate DataType="{x:Type Model:FileItem}">
-            <Label Content="{Binding Path=Name}" ToolTip="{Binding Path=Path}" Foreground="#FF767676" FontFamily="Arial" Height="Auto" HorizontalContentAlignment="Left" Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
-        </DataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type Model:DirectoryItem}"
+                                      ItemsSource="{Binding Items}">
+                <Label Content="{Binding Path=Name}" ToolTip="{Binding Path=Path}" Foreground="#FF595959" FontFamily="Arial" FontWeight="Bold" Height="Auto" HorizontalContentAlignment="Left" Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            </HierarchicalDataTemplate>
 
+            <DataTemplate DataType="{x:Type Model:FileItem}">
+                <Label Content="{Binding Path=Name}" ToolTip="{Binding Path=Path}" Foreground="#FF767676" FontFamily="Arial" Height="Auto" HorizontalContentAlignment="Left" Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            </DataTemplate>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
-        <StackPanel Width="250" Background="#FF0288D1" HorizontalAlignment="Left" Margin="0,52,0,0">
-            <Button>Favorites</Button>
-            <Button>Playlists</Button>
 
-            <TreeView x:Name="Files" HorizontalAlignment="Left" Height="347" Width="250" ItemsSource="{Binding}" FontFamily="Arial" BorderThickness="0" Background="White" Foreground="#FF9E9E9E" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItemChanged="Files_SelectedItemChanged" Padding="0">
+        <TabControl HorizontalAlignment="Left" Margin="-2,50,0,0" Width="1000" Height="548" BorderThickness="0" TabStripPlacement="Left" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Padding="0">
 
-                <TreeView.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+            <TabItem Padding="0">
+                <TabItem.Header>
+                    <Button Content="Folder" Background="#0288D1" Height="75" Foreground="White" Width="250" BorderThickness="0" BorderBrush="#FF0476B4"/>
+                </TabItem.Header>
+                <Grid>
+                    <ScrollViewer Width="750" Height="546" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalScrollBarVisibility="Hidden" Margin="0">
+                        <StackPanel x:Name="SongsPanel" Width="750"/>
+                    </ScrollViewer>
+
+                    <Grid HorizontalAlignment="Left" Height="60" VerticalAlignment="Bottom" Width="750" Background="#E564B5F6">
+                        <ProgressBar x:Name="TimeProgressBar" HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="PlayButton" HorizontalAlignment="Left" Height="18" Margin="64,0,0,0" VerticalAlignment="Center" Width="15" BorderBrush="{x:Null}" BorderThickness="0" Click="PlayButton_Click">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Resources/play.png"/>
+                            </Button.Background>
+                        </Button>
+                        <Button HorizontalAlignment="Left" Height="15" Margin="685,0,0,0" VerticalAlignment="Center" Width="18" BorderBrush="{x:Null}" BorderThickness="0">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Resources/volume.png"/>
+                            </Button.Background>
+                        </Button>
+                        <Label x:Name="TimeLeft" Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Padding="0">
+                <TabItem.Header>
+                    <Button Content="Favorites" Background="#0288D1" Height="75" Foreground="White" Width="250" BorderThickness="0" BorderBrush="#FF0476B4"/>
+                </TabItem.Header>
+                <Grid/>
+            </TabItem>
+
+            <TabItem Padding="0">
+                <TabItem.Header>
+                    <Button Content="Playlists" Background="#0288D1" Height="75" Foreground="White" Width="250" BorderThickness="0" BorderBrush="#FF0476B4"/>
+                </TabItem.Header>
+                <Grid/>
+            </TabItem>
+        </TabControl>
+
+        <TreeView x:Name="Files" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding}" FontFamily="Arial" BorderThickness="0" Background="White" Foreground="#FF9E9E9E" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItemChanged="Files_SelectedItemChanged" Padding="0" Margin="0,278,0,0">
+
+            <TreeView.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
                       Color="#FFCCE8FF" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
                       Color="#FFD9D9D9" />
 
-                    <Style TargetType="TreeViewItem">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FFE5F3FF"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
+                <Style TargetType="TreeViewItem">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FFE5F3FF"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
 
-                </TreeView.Resources>
+            </TreeView.Resources>
 
-            </TreeView>
-        </StackPanel>
-
-        <ScrollViewer Width="750" Height="548" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,52,0,0" VerticalScrollBarVisibility="Hidden">
-            <StackPanel x:Name="SongsPanel" Width="750"/>
-        </ScrollViewer>
-
-
-
-        <Grid HorizontalAlignment="Center" Height="60" VerticalAlignment="Bottom" Width="750" Background="#E564B5F6" Margin="250,0,0,0">
-            <ProgressBar x:Name="TimeProgressBar" HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Foreground="White" BorderThickness="0"/>
-            <Button x:Name="PlayButton" HorizontalAlignment="Left" Height="18" Margin="64,0,0,0" VerticalAlignment="Center" Width="15" BorderBrush="{x:Null}" BorderThickness="0" Click="PlayButton_Click">
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/play.png"/>
-                </Button.Background>
-            </Button>
-            <Button HorizontalAlignment="Left" Height="15" Margin="685,0,0,0" VerticalAlignment="Center" Width="18" BorderBrush="{x:Null}" BorderThickness="0">
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/volume.png"/>
-                </Button.Background>
-            </Button>
-            <Label x:Name="TimeLeft" Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
-
-        </Grid>
+        </TreeView>
 
         <Grid x:Name="TitleBar" HorizontalAlignment="Center" Height="60" VerticalAlignment="Top" Width="1000" MouseDown="TitleBar_MouseDown">
             <Grid.Background>
@@ -84,14 +106,11 @@
             </Grid.Background>
             <!--<Label Content="Zero Music Player" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Center" FontFamily="Arial" Foreground="#FF4B4B4B"/>-->
             <Label Content="君の名は" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial" FontSize="16" Margin="0,0,0,5" FontWeight="Bold" Foreground="#FF4B4B4B"/>
-            <Button Content="" HorizontalAlignment="Left" Margin="944,0,0,0" VerticalAlignment="Top" Width="56" Height="52" Click="CloseButton_Click" BorderBrush="{x:Null}" Foreground="White" OpacityMask="White">
-                <Button.Background>
-                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/close.png"/>
-                </Button.Background>
+            <Button HorizontalAlignment="Left" Margin="944,0,0,0" VerticalAlignment="Top" Width="56" Height="52" Click="CloseButton_Click" BorderBrush="#FFEDEDED" Background="{x:Null}" >
+                <Image Source="pack://siteoforigin:,,,/Resources/close.png" Margin="10"/>
             </Button>
 
         </Grid>
-
-
+        
     </Grid>
 </Window>
