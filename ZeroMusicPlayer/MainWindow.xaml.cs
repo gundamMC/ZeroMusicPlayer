@@ -41,9 +41,12 @@ namespace ZeroMusicPlayer
         {
             InitializeComponent();
 
-            //原:@"\\excalibur\music"
-            //抱歉懒得改回去了【雾 快做设置吧 #乱打注释感觉会被打
-            var items = GetItems(@"D:\youxi\osu\Songs");
+            if (String.IsNullOrWhiteSpace(Properties.Settings.Default.DirectoryPath))
+            {
+                new PathMessageBox().ShowDialog();
+            }
+
+            var items = GetItems(Properties.Settings.Default.DirectoryPath);
 
             Files.DataContext = items;
         }
