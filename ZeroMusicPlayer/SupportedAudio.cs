@@ -8,7 +8,8 @@ namespace ZeroMusicPlayer
         public static readonly List<String> Extensions = new List<string>(){
             ".wav",
             ".mp3",
-            ".flac"
+            ".flac",
+            ".m4a"
         };
     }
 }

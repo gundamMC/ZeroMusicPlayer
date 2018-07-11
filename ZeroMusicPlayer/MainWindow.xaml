@@ -47,21 +47,6 @@
                     <ScrollViewer Width="750" Height="546" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalScrollBarVisibility="Hidden" Margin="0">
                         <StackPanel x:Name="SongsPanel" Width="750"/>
                     </ScrollViewer>
-
-                    <Grid HorizontalAlignment="Left" Height="60" VerticalAlignment="Bottom" Width="750" Background="#E564B5F6">
-                        <ProgressBar x:Name="TimeProgressBar" HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Foreground="White" BorderThickness="0"/>
-                        <Button x:Name="PlayButton" HorizontalAlignment="Left" Height="18" Margin="64,0,0,0" VerticalAlignment="Center" Width="15" BorderBrush="{x:Null}" BorderThickness="0" Click="PlayButton_Click">
-                            <Button.Background>
-                                <ImageBrush ImageSource="Resources/play.png"/>
-                            </Button.Background>
-                        </Button>
-                        <Button HorizontalAlignment="Left" Height="15" Margin="685,0,0,0" VerticalAlignment="Center" Width="18" BorderBrush="{x:Null}" BorderThickness="0">
-                            <Button.Background>
-                                <ImageBrush ImageSource="Resources/volume.png"/>
-                            </Button.Background>
-                        </Button>
-                        <Label x:Name="TimeLeft" Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
-                    </Grid>
                 </Grid>
             </TabItem>
 
@@ -111,6 +96,24 @@
             </Button>
 
         </Grid>
-        
+
+        <Grid HorizontalAlignment="Left" Height="60" VerticalAlignment="Bottom" Width="750" Background="#E564B5F6" Margin="250, 0, 0, 0">
+            <ProgressBar x:Name="TimeProgressBar" HorizontalAlignment="Left" Height="8" Margin="146,27,0,27" VerticalAlignment="Center" Width="482" Background="#FF64B5F6" Foreground="White" BorderThickness="0"/>
+            <Button x:Name="PlayButton" HorizontalAlignment="Left" Height="18" Margin="64,0,0,0" VerticalAlignment="Center" Width="15" BorderThickness="0" Click="PlayButton_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/play.png"/>
+                </Button.Background>
+                <Button.BorderBrush>
+                    <ImageBrush ImageSource="Resources/play.png"/>
+                </Button.BorderBrush>
+            </Button>
+            <Button HorizontalAlignment="Left" Height="15" Margin="685,0,0,0" VerticalAlignment="Center" Width="18" BorderBrush="{x:Null}" BorderThickness="0">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/volume.png"/>
+                </Button.Background>
+            </Button>
+            <Label x:Name="TimeLeft" Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
+        </Grid>
+
     </Grid>
 </Window>

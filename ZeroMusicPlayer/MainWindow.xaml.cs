@@ -41,21 +41,30 @@ namespace ZeroMusicPlayer
         {
             InitializeComponent();
 
-            if (String.IsNullOrWhiteSpace(Properties.Settings.Default.DirectoryPath))
+            if (String.IsNullOrWhiteSpace(Properties.Settings.Default.DirectoryPath) || 
+                !Directory.Exists(Properties.Settings.Default.DirectoryPath))
             {
                 new PathMessageBox().ShowDialog();
             }
 
             var items = GetItems(Properties.Settings.Default.DirectoryPath);
 
-            Files.DataContext = items;
+            var prev_items = new List<Item>() {
+                new DirectoryItem
+                {
+                    Name = Properties.Settings.Default.DirectoryPath.Substring(Properties.Settings.Default.DirectoryPath.LastIndexOf('\\') + 1),
+                    Path = Properties.Settings.Default.DirectoryPath,
+                    Items = items
+                }
+            };
+
+            Files.DataContext = prev_items;
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
-
 
         public List<Item> GetItems(string path)
         {
@@ -75,8 +84,6 @@ namespace ZeroMusicPlayer
             {
                 if (!SupportedAudio.Extensions.Contains(file.Extension.ToLower()))
                     continue;
-
-                
                 
                 items.Add(new FileItem
                 {
@@ -122,7 +129,6 @@ namespace ZeroMusicPlayer
             {
                 SongsPanel.Children.Clear();
 
-
                 foreach (Item item in ((DirectoryItem)Files.SelectedItem).Items)
                 {
 
@@ -147,14 +153,12 @@ namespace ZeroMusicPlayer
 
         private void LoadSongInfo(List<SongItemControl> items)
         {
-
             foreach(SongItemControl item in items)
             {
                 String time = GetDuration(item.Path);
 
                 String SongName;
                 String Author = "UNKNOW";
-
 
                 using (TagLib.File fileTags = TagLib.File.Create(item.Path))
                 {
@@ -199,7 +203,16 @@ namespace ZeroMusicPlayer
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path});
+            if (Player.Playing())
+            {
+                Player.Pause();
+            }
+            else
+            {
+                Player.Play();
+                //Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path});
+            }
+            
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) {
