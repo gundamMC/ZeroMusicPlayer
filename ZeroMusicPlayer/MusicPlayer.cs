@@ -113,13 +113,12 @@ namespace ZeroMusicPlayer {
             WavePlayer.Pause();
         }
 
-        public void Play()
+        public void Resume()
         {
             if (AudioFile == null || WavePlayer.PlaybackState != PlaybackState.Paused)
                 PlayNext();
-                    
-
-            WavePlayer.Play();
+            else
+                WavePlayer.Play();
         }
 
         public void Add(SongItem song)
@@ -147,11 +146,17 @@ namespace ZeroMusicPlayer {
             }
         }
 
-        public Boolean Playing()
+        public int State()
         {
-            if (AudioFile != null)
-                return WavePlayer.PlaybackState == PlaybackState.Playing;
-            return false;
+            switch (WavePlayer.PlaybackState)
+            {
+                case PlaybackState.Playing:
+                    return 0;
+                case PlaybackState.Paused:
+                    return 1;
+                default:
+                    return -1;
+            }
         }
     }
 }

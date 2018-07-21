@@ -26,7 +26,9 @@ namespace ZeroMusicPlayer
         public void AddSong(SongItem song)
         {
             Player.Add(song);
+            Queue_Panel.Children.Add(new SongItemControlSmall() { SongName = song.Name });
         }
+
         SongItemControl SelectedSongControl = null;
         public void SetSelectedSong(SongItemControl control)
         {
@@ -47,18 +49,7 @@ namespace ZeroMusicPlayer
                 new PathMessageBox().ShowDialog();
             }
 
-            var items = GetItems(Properties.Settings.Default.DirectoryPath);
-
-            var prev_items = new List<Item>() {
-                new DirectoryItem
-                {
-                    Name = Properties.Settings.Default.DirectoryPath.Substring(Properties.Settings.Default.DirectoryPath.LastIndexOf('\\') + 1),
-                    Path = Properties.Settings.Default.DirectoryPath,
-                    Items = items
-                }
-            };
-
-            Files.DataContext = prev_items;
+            ContentFrame.Navigate(new FilePage());
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -66,152 +57,21 @@ namespace ZeroMusicPlayer
             this.DragMove();
         }
 
-        public List<Item> GetItems(string path)
-        {
-            List<Item> items = new List<Item>();
-            DirectoryInfo dir = new DirectoryInfo(path);
-
-            foreach(DirectoryInfo directory in dir.GetDirectories())
-            {
-                items.Add(new DirectoryItem {
-                    Name = directory.Name,
-                    Path = directory.FullName,
-                    Items = GetItems(directory.FullName)
-                });
-            }
-
-            foreach (FileInfo file in dir.GetFiles())
-            {
-                if (!SupportedAudio.Extensions.Contains(file.Extension.ToLower()))
-                    continue;
-                
-                items.Add(new FileItem
-                {
-                    Name = file.Name.Replace(file.Extension, ""),
-                    Path = file.FullName
-                });
-            }
-
-            return items;
-        }
-
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
-        public static extern bool DeleteObject(IntPtr hObject);
-
-        private static String GetDuration(string fileName)
-        {
-            try
-            {
-                MediaFoundationReader wf = new MediaFoundationReader(fileName);
-                String result = MusicPlayer.FormatTimeSpan(wf.TotalTime);
-                wf.Dispose();
-                return result;
-            }
-            catch
-            {
-                return "UNKNOW";
-            }
-            
-        }
-
-        Thread IconThread;
-
-        private void Files_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            List<SongItemControl> SongItems = new List<SongItemControl>();
-
-            if (IconThread != null && IconThread.IsAlive)
-                IconThread.Abort();
-
-            IconThread = new Thread(new ThreadStart(() => LoadSongInfo(SongItems)));
-
-            if (Files.SelectedItem is DirectoryItem)
-            {
-                SongsPanel.Children.Clear();
-
-                foreach (Item item in ((DirectoryItem)Files.SelectedItem).Items)
-                {
-
-                    if (item is FileItem)
-                    {
-                        SongItemControl tmp = new SongItemControl()
-                        {
-                            SongName = item.Name,
-                            Path = item.Path
-                        };
-
-                        SongsPanel.Children.Add(tmp);
-                        SongItems.Add(tmp);
-                    }
-                }
-
-                SongsPanel.Children.Add(new Label() { Height = 50 });
-
-                IconThread.Start();
-            }
-        }
-
-        private void LoadSongInfo(List<SongItemControl> items)
-        {
-            foreach(SongItemControl item in items)
-            {
-                String time = GetDuration(item.Path);
-
-                String SongName;
-                String Author = "UNKNOW";
-
-                using (TagLib.File fileTags = TagLib.File.Create(item.Path))
-                {
-                    SongName = fileTags.Tag.Title;
-                    if (fileTags.Tag.Performers.Count() > 0)
-                        Author = fileTags.Tag.Performers[0];
-                }
-
-                using (ShellFile shellFile = ShellFile.FromFilePath(item.Path))
-                {
-                    using (Bitmap shellThumb = shellFile.Thumbnail.ExtraLargeBitmap)
-                    {
-                        IntPtr hBitMap = shellThumb.GetHbitmap();
-                        try
-                        {
-                            var bs = Imaging.CreateBitmapSourceFromHBitmap(hBitMap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                            bs.Freeze();
-                            var image = new ImageBrush(bs);
-                            image.Freeze();
-                            item.Dispatcher.Invoke(() => {
-                                item.Icon = image;
-                                item.Time = time;
-                                if (!String.IsNullOrWhiteSpace(SongName))
-                                    item.SongName = SongName;
-                                item.Author = Author;
-                            });
-                        }
-                        finally
-                        {
-                            DeleteObject(hBitMap); // prevent memory leak from Imaging.CreateBitmapSourceFromHBitmap
-                        }
-                    }
-                }
-            }
-
-            items.Clear();
-
-            // force garbage collect
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-
-        }
-
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Player.Playing())
+            switch (Player.State())
             {
-                Player.Pause();
+                case 0:
+                    Player.Pause();
+                    break;
+                case 1:
+                    Player.Resume();
+                    break;
+                case -1:
+                    Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path });
+                    break;
             }
-            else
-            {
-                Player.Play();
-                //Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path});
-            }
+
             
         }
 

@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="HoverButtonDictionary.xaml"/>
+                <ResourceDictionary Source="ScrollBarDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Custom Tabitem -->
@@ -37,35 +38,10 @@
 
     <Grid>
 
-        <TabControl HorizontalAlignment="Left" Margin="-2,50,0,0" Width="1000" Height="548" BorderThickness="0" TabStripPlacement="Left" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Padding="0">
+        <Frame x:Name="ContentFrame" HorizontalAlignment="Left" Height="550" Margin="250,50 ,0,0" VerticalAlignment="Top" Width="750"/>
 
-            <TabItem Padding="0">
-                <TabItem.Header>
-                    <Button Content="Folder" Background="#0288D1" Height="75" Foreground="White" Width="250" BorderThickness="0" BorderBrush="#FF0476B4"/>
-                </TabItem.Header>
-                <Grid>
-                    <ScrollViewer Width="750" Height="546" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalScrollBarVisibility="Hidden" Margin="0">
-                        <StackPanel x:Name="SongsPanel" Width="750"/>
-                    </ScrollViewer>
-                </Grid>
-            </TabItem>
 
-            <TabItem Padding="0">
-                <TabItem.Header>
-                    <Button Content="Favorites" Background="#0288D1" Height="75" Foreground="White" Width="250" BorderThickness="0" BorderBrush="#FF0476B4"/>
-                </TabItem.Header>
-                <Grid/>
-            </TabItem>
-
-            <TabItem Padding="0">
-                <TabItem.Header>
-                    <Button Content="Playlists" Background="#0288D1" Height="75" Foreground="White" Width="250" BorderThickness="0" BorderBrush="#FF0476B4"/>
-                </TabItem.Header>
-                <Grid/>
-            </TabItem>
-        </TabControl>
-
-        <TreeView x:Name="Files" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding}" FontFamily="Arial" BorderThickness="0" Background="White" Foreground="#FF9E9E9E" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItemChanged="Files_SelectedItemChanged" Padding="0" Margin="0,278,0,0">
+        <!--<TreeView x:Name="Files" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding}" FontFamily="Arial" BorderThickness="0" Background="White" Foreground="#FF9E9E9E" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItemChanged="Files_SelectedItemChanged" Padding="0" Margin="0,278,0,0">
 
             <TreeView.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
@@ -83,7 +59,7 @@
 
             </TreeView.Resources>
 
-        </TreeView>
+        </TreeView>-->
 
         <Grid x:Name="TitleBar" HorizontalAlignment="Center" Height="60" VerticalAlignment="Top" Width="1000" MouseDown="TitleBar_MouseDown">
             <Grid.Background>
@@ -92,7 +68,7 @@
             <!--<Label Content="Zero Music Player" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Center" FontFamily="Arial" Foreground="#FF4B4B4B"/>-->
             <Label Content="君の名は" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial" FontSize="16" Margin="0,0,0,5" FontWeight="Bold" Foreground="#FF4B4B4B"/>
             <Button HorizontalAlignment="Left" Margin="944,0,0,0" VerticalAlignment="Top" Width="56" Height="52" Click="CloseButton_Click" BorderBrush="#FFEDEDED" Background="{x:Null}" >
-                <Image Source="pack://siteoforigin:,,,/Resources/close.png" Margin="10"/>
+                <Image Source="pack://siteoforigin:,,,/Resources/close.png" Margin="15"/>
             </Button>
 
         </Grid>
@@ -104,15 +80,58 @@
                     <ImageBrush ImageSource="Resources/play.png"/>
                 </Button.Background>
                 <Button.BorderBrush>
-                    <ImageBrush ImageSource="Resources/play.png"/>
+                    <ImageBrush ImageSource="Resources/play_hover.png"/>
                 </Button.BorderBrush>
             </Button>
-            <Button HorizontalAlignment="Left" Height="15" Margin="685,0,0,0" VerticalAlignment="Center" Width="18" BorderBrush="{x:Null}" BorderThickness="0">
+            <Button HorizontalAlignment="Left" Height="16" Margin="675,22,0,22" VerticalAlignment="Center" Width="18" BorderThickness="0">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/volume.png"/>
                 </Button.Background>
+                <Button.BorderBrush>
+                    <ImageBrush ImageSource="Resources/volume_hover.png"/>
+                </Button.BorderBrush>
             </Button>
             <Label x:Name="TimeLeft" Content="1:49" HorizontalAlignment="Left" Margin="633,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontWeight="Bold" Foreground="White" FontSize="10"/>
+
+            <Button x:Name="Queue_Button" HorizontalAlignment="Left" Height="15" Margin="709,22,0,23" VerticalAlignment="Center" Width="18" BorderThickness="0">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/queue.png"/>
+                </Button.Background>
+                <Button.BorderBrush>
+                    <ImageBrush ImageSource="Resources/queue_hover.png"/>
+                </Button.BorderBrush>
+            </Button>
+        </Grid>
+
+        <Grid HorizontalAlignment="Left" Height="400" Margin="600,140,0,0" VerticalAlignment="Top" Width="400" Background="White">
+            <Grid.Effect>
+                <DropShadowEffect Direction="135" ShadowDepth="2" Color="#FFD6D6D6" BlurRadius="10"/>
+            </Grid.Effect>
+
+            <TabControl HorizontalAlignment="Left" Height="388" Margin="0,12,0,0" VerticalAlignment="Top" Width="400" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabPanel}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem>
+                    <TabItem.Header>
+                        <Button Content="Queue" Height="20" Width="100" Background="White" BorderBrush="#FFDFDFDF"/>
+                    </TabItem.Header>
+                    <Grid Margin="0,12,0,0">
+                        <ScrollViewer>
+                            <StackPanel x:Name="Queue_Panel"/>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <Button Content="History" Height="20" Width="100" Background="White" BorderBrush="#FFDFDFDF"/>
+                    </TabItem.Header>
+                    <Grid Background="#FFE5E5E5" Margin="0,12,0,0"/>
+                </TabItem>
+            </TabControl>
         </Grid>
 
     </Grid>
