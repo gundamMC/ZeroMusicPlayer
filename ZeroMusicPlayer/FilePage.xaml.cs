@@ -31,7 +31,7 @@ namespace ZeroMusicPlayer
 
         Thread IconThread;
 
-        private void Explore(List<Item> items)
+        public void Explore(List<Item> items)
         {
             List<SongItemControl> SongItems = new List<SongItemControl>();
 
@@ -55,6 +55,10 @@ namespace ZeroMusicPlayer
 
                     SongsPanel.Children.Add(tmp);
                     SongItems.Add(tmp);
+                }
+                else
+                {
+                    SongsPanel.Children.Add(new FolderItemControl() { FolderName = item.Name, Items = ((DirectoryItem)item).Items, Host = this});
                 }
             }
 
