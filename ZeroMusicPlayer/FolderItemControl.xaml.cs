@@ -19,25 +19,12 @@ namespace ZeroMusicPlayer
     /// <summary>
     /// Interaction logic for FolderItemControl.xaml
     /// </summary>
-    public partial class FolderItemControl : UserControl
+    public partial class FolderItemControl : ItemControl
     {
-        public string FolderName
-        {
-            get { return (String)GetValue(FolderNameProperty); }
-            set { SetValue(FolderNameProperty, value.ToUpper()); }
-        }
 
         public List<Item> Items { get; set; }
         public FilePage Host { get; set; }
 
-        public Boolean Selected
-        {
-            get { return (Boolean)GetValue(SelectedProperty); }
-            set { SetValue(SelectedProperty, value); }
-        }
-
-        public static readonly DependencyProperty FolderNameProperty = DependencyProperty.Register("FolderName", typeof(String), typeof(FolderItemControl), new PropertyMetadata(""));
-        public static readonly DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(Boolean), typeof(FolderItemControl), new PropertyMetadata(false));
 
         public FolderItemControl()
         {
@@ -47,6 +34,11 @@ namespace ZeroMusicPlayer
         private void FolderItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Host.Explore(Items);
+        }
+
+        private void FolderItem_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ((MainWindow)App.Current.MainWindow).SetSelectedItemControl(this);
         }
     }
 }

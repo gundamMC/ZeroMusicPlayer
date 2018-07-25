@@ -49,7 +49,7 @@ namespace ZeroMusicPlayer
                 {
                     SongItemControl tmp = new SongItemControl()
                     {
-                        SongName = item.Name,
+                        ItemName = item.Name,
                         Path = item.Path
                     };
 
@@ -58,7 +58,7 @@ namespace ZeroMusicPlayer
                 }
                 else
                 {
-                    SongsPanel.Children.Add(new FolderItemControl() { FolderName = item.Name, Items = ((DirectoryItem)item).Items, Host = this});
+                    SongsPanel.Children.Add(new FolderItemControl() { ItemName = item.Name, Items = ((DirectoryItem)item).Items, Host = this});
                 }
             }
 
@@ -100,7 +100,7 @@ namespace ZeroMusicPlayer
                                 item.Icon = image;
                                 item.Time = time;
                                 if (!String.IsNullOrWhiteSpace(SongName))
-                                    item.SongName = SongName;
+                                    item.ItemName = SongName;
                                 item.Author = Author;
                             });
                         }

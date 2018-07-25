@@ -29,14 +29,14 @@ namespace ZeroMusicPlayer
             Queue_Panel.Children.Add(new SongItemControlSmall() { SongName = song.Name });
         }
 
-        SongItemControl SelectedSongControl = null;
-        public void SetSelectedSong(SongItemControl control)
+        ItemControl SelectedItemControl = null;
+        public void SetSelectedItemControl(ItemControl control)
         {
-            if (SelectedSongControl != null)
-                SelectedSongControl.Selected = false;
+            if (SelectedItemControl != null)
+                SelectedItemControl.Selected = false;
             control.Selected = true;
 
-            SelectedSongControl = control;
+            SelectedItemControl = control;
         }
 
         public MainWindow()
@@ -59,6 +59,12 @@ namespace ZeroMusicPlayer
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
+            if (SelectedItemControl is FolderItemControl)
+            {
+                ((FolderItemControl)SelectedItemControl).Host.Explore(((FolderItemControl)SelectedItemControl).Items);
+                return;
+            }
+
             switch (Player.State())
             {
                 case 0:
@@ -68,7 +74,7 @@ namespace ZeroMusicPlayer
                     Player.Resume();
                     break;
                 case -1:
-                    Player.PlayNow(new SongItem() { Name = SelectedSongControl.Name, Path = SelectedSongControl.Path });
+                    Player.PlayNow(new SongItem() { Name = SelectedItemControl.Name, Path = ((SongItemControl)SelectedItemControl).Path });
                     break;
             }
 
