@@ -20,18 +20,61 @@ namespace ZeroMusicPlayer
     /// </summary>
     public partial class FilePage : Page
     {
+        private String CurrentPath = "";
+
         public FilePage()
         {
             InitializeComponent();
 
             List<Item> items = GetItems(Properties.Settings.Default.DirectoryPath);
 
-            Explore(items);
+            Explore(new DirectoryItem()
+            {
+                Name = new DirectoryInfo(Properties.Settings.Default.DirectoryPath).Name,
+                Path = Properties.Settings.Default.DirectoryPath,
+                Items = items
+            });
+        }
+
+        private void AddAddressButton(DirectoryItem dir)
+        {
+            List<DirectoryItem> subfolders = new List<DirectoryItem>();
+            foreach (Item i in dir.Items)
+                if (i is DirectoryItem)
+                    subfolders.Add((DirectoryItem)i);
+            AddressPanel.Children.Add(new AddressBarButton(this) { Text = dir.Name, Dir = dir, Subfolders = subfolders});
         }
 
         Thread IconThread;
 
-        public void Explore(List<Item> items)
+
+        /// <summary>
+        /// Explores a subfolder in the current directory and adds it to the address bar
+        /// </summary>
+        /// <param name="dir">The directory to advance in</param>
+        public void Explore(DirectoryItem dir)
+        {
+            AddAddressButton(dir);
+            CurrentPath = dir.Path;
+
+            Explore(dir.Items);
+        }
+
+        /// <summary>
+        /// Explroes a previous folder and removes all the address bar buttons after it
+        /// </summary>
+        /// <param name="dir">The directory to explore</param>
+        /// <param name="removeFromIndex">The index of the directory in the address bar</param>
+        public void Explore(DirectoryItem dir, int removeFromIndex)
+        {
+            AddressPanel.Children.RemoveRange(removeFromIndex, AddressPanel.Children.Count - removeFromIndex);
+
+            CurrentPath = dir.Path;
+
+            Explore(dir.Items);
+        }
+
+        private void Explore(List<Item> items)
         {
             List<SongItemControl> SongItems = new List<SongItemControl>();
 
@@ -58,7 +101,7 @@ namespace ZeroMusicPlayer
                 }
                 else
                 {
-                    SongsPanel.Children.Add(new FolderItemControl() { ItemName = item.Name, Items = ((DirectoryItem)item).Items, Host = this});
+                    SongsPanel.Children.Add(new FolderItemControl() { ItemName = item.Name, Dir = (DirectoryItem)item, Host = this});
                 }
             }
 

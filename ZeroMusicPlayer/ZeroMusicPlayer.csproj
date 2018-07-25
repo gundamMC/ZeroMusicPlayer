@@ -71,6 +71,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddressBarButton.xaml.cs">
+      <DependentUpon>AddressBarButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FilePage.xaml.cs">
       <DependentUpon>FilePage.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,10 @@
       <DependentUpon>SongItemControlSmall.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportedAudio.cs" />
+    <Page Include="AddressBarButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

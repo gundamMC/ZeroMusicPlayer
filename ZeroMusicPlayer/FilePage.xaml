@@ -13,7 +13,14 @@
     </Page.Resources>
 
     <Grid >
-        <ScrollViewer Width="750" Height="550" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0">
+        <Grid Height="30" VerticalAlignment="Top" Background="White">
+            <Button Content="&lt;" Height="30" HorizontalAlignment="Left" Width="30" BorderThickness="0" Background="White"/>
+            <StackPanel x:Name="AddressPanel" Width="650" Orientation="Horizontal" HorizontalAlignment="Left" Margin="30,0,0,0" Background="#FFF3F3F3">
+                <Label Width="10"/>
+            </StackPanel>
+        </Grid>
+        
+        <ScrollViewer Width="750" Height="520" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0">
             <StackPanel x:Name="SongsPanel" Width="750"/>
         </ScrollViewer>
     </Grid>

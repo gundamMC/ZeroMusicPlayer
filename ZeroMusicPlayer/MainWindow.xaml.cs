@@ -61,7 +61,7 @@ namespace ZeroMusicPlayer
         {
             if (SelectedItemControl is FolderItemControl)
             {
-                ((FolderItemControl)SelectedItemControl).Host.Explore(((FolderItemControl)SelectedItemControl).Items);
+                ((FolderItemControl)SelectedItemControl).Host.Explore(((FolderItemControl)SelectedItemControl).Dir);
                 return;
             }
 

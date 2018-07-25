@@ -22,7 +22,7 @@ namespace ZeroMusicPlayer
     public partial class FolderItemControl : ItemControl
     {
 
-        public List<Item> Items { get; set; }
+        public DirectoryItem Dir { get; set; }
         public FilePage Host { get; set; }
 
 
@@ -33,7 +33,7 @@ namespace ZeroMusicPlayer
 
         private void FolderItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Host.Explore(Items);
+            Host.Explore(Dir);
         }
 
         private void FolderItem_MouseUp(object sender, MouseButtonEventArgs e)
