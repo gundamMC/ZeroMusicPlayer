@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Timers;
 
@@ -11,7 +12,7 @@ namespace ZeroMusicPlayer {
         private AudioFileReader AudioFile;
         private WaveOutEvent WavePlayer = new WaveOutEvent();
 
-        private LinkedList<SongItem> Queue = new LinkedList<SongItem>();
+        private ObservableCollection<SongItem> Queue = new ObservableCollection<SongItem>();
         private int PlayMode { get; set; } = 0;
         // 0 for loop, 1 for shuffle, 2 for single
 
@@ -19,10 +20,12 @@ namespace ZeroMusicPlayer {
 
         private Timer timer = new Timer() { Interval = 100 };
 
-        public MusicPlayer()
+        public MusicPlayer(System.Windows.Controls.ItemsControl queue_panel)
         {
             WavePlayer.PlaybackStopped += OnPlaybackStopped;
             timer.Elapsed += Timer_Elapsed;
+
+            queue_panel.ItemsSource = this.Queue;
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -91,10 +94,7 @@ namespace ZeroMusicPlayer {
             switch (PlayMode)
             {
                 case 0:
-                    SongItem result = Queue.First();
-                    Queue.RemoveFirst();
-                    Queue.AddLast(result);
-                    return result;
+                    return Queue.First();
                 case 1:
                     int rnd = new Random().Next(0, Queue.Count());
                     return Queue.ElementAt(rnd);
@@ -126,7 +126,7 @@ namespace ZeroMusicPlayer {
             if (Queue.Contains(song))
                 return;
 
-            Queue.AddLast(song);
+            Queue.Add(song);
         }
 
         public void SetVolume(int Volume)
@@ -136,8 +136,16 @@ namespace ZeroMusicPlayer {
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
+            if (PlayMode == 0)
+            {
+                SongItem tmp = Queue[0];
+                Queue.RemoveAt(0);
+                Queue.Add(tmp);
+            }
+
             if (StoppedByUser)
             {
+                // don't automatically play the next song if it is manually stopped
                 StoppedByUser = false;
             }
             else

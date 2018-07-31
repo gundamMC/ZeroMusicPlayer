@@ -6,6 +6,7 @@ namespace ZeroMusicPlayer {
     {
         public String Name { get; set; }
         public String Path { get; set; }
+        public String Time { get; set; }
 
         public override bool Equals(object obj)
         {

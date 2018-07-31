@@ -22,11 +22,10 @@ namespace ZeroMusicPlayer
     public partial class MainWindow : Window
     {
 
-        private MusicPlayer Player = new MusicPlayer();
+        private MusicPlayer Player;
         public void AddSong(SongItem song)
         {
             Player.Add(song);
-            Queue_Panel.Children.Add(new SongItemControlSmall() { SongName = song.Name });
         }
 
         ItemControl SelectedItemControl = null;
@@ -50,6 +49,8 @@ namespace ZeroMusicPlayer
             }
 
             ContentFrame.Navigate(new FilePage());
+
+            Player = new MusicPlayer(Queue_Panel);
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -74,7 +75,7 @@ namespace ZeroMusicPlayer
                     Player.Resume();
                     break;
                 case -1:
-                    Player.PlayNow(new SongItem() { Name = SelectedItemControl.Name, Path = ((SongItemControl)SelectedItemControl).Path });
+                    Player.PlayNow(new SongItem() { Name = SelectedItemControl.Name, Path = ((SongItemControl)SelectedItemControl).Path, Time = ((SongItemControl)SelectedItemControl).Time });
                     break;
             }
 

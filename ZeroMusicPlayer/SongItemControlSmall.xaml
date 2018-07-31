@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ZeroMusicPlayer.SongItemControlSmall"
+﻿<local:ItemControl x:Class="ZeroMusicPlayer.SongItemControlSmall"
              x:Name="SongItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,8 +6,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ZeroMusicPlayer"
              mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="380">
+             d:DesignHeight="40" d:DesignWidth="380"
+             Height="30">
     <Grid>
-        <Label Content="{Binding Path=SongName, ElementName=SongItem}" Width="150" HorizontalAlignment="Left" Padding="0" VerticalContentAlignment="Center"/>
+        <Rectangle Fill="#FFEBECED" Height="2" VerticalAlignment="Bottom" StrokeThickness="0"/>
+        <Label Content="{Binding Path=ItemName, ElementName=SongItem}" Width="150" HorizontalAlignment="Left" Padding="0" VerticalContentAlignment="Center" Margin="10,0,0,0" FontSize="12"/>
+        <Label Content="{Binding Path=Time, ElementName=SongItem}" Width="50" HorizontalAlignment="Right" Padding="0" VerticalContentAlignment="Center" Margin="0,0,10,0" FontSize="12" Foreground="#FF424242"/>
     </Grid>
-</UserControl>
+</local:ItemControl>

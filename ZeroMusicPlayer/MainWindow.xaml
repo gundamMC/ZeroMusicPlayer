@@ -121,7 +121,19 @@
                     </TabItem.Header>
                     <Grid Margin="0,12,0,0">
                         <ScrollViewer>
-                            <StackPanel x:Name="Queue_Panel"/>
+                            <!--<StackPanel x:Name="Queue_Panel"/>-->
+                            <ItemsControl x:Name="Queue_Panel">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:SongItemControlSmall ItemName="{Binding Name}" Time="{Binding Time}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </ScrollViewer>
                     </Grid>
                 </TabItem>

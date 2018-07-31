@@ -35,6 +35,7 @@ namespace ZeroMusicPlayer
         public static readonly DependencyProperty AuthorProperty = DependencyProperty.Register("Author", typeof(String), typeof(SongItemControl), new PropertyMetadata(""));
         public static readonly DependencyProperty TimeProperty = DependencyProperty.Register("Time", typeof(String), typeof(SongItemControl), new PropertyMetadata(""));
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(ImageBrush), typeof(SongItemControl), new PropertyMetadata(new ImageBrush()));
+
         public SongItemControl()
         {
             InitializeComponent();
@@ -42,7 +43,7 @@ namespace ZeroMusicPlayer
 
         private void SongItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ((MainWindow)App.Current.MainWindow).AddSong(new SongItem() { Name = ItemName, Path = this.Path });
+            ((MainWindow)App.Current.MainWindow).AddSong(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
         }
 
 

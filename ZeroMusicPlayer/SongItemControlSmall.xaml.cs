@@ -18,15 +18,17 @@ namespace ZeroMusicPlayer
     /// <summary>
     /// Interaction logic for SongItemControlSmall.xaml
     /// </summary>
-    public partial class SongItemControlSmall : UserControl
+    public partial class SongItemControlSmall : ItemControl
     {
-        public string SongName
+
+        public string Time
         {
-            get { return (String)GetValue(SongNameProperty); }
-            set { SetValue(SongNameProperty, value.ToUpper()); }
+            get { return (String)GetValue(TimeProperty); }
+            set { SetValue(TimeProperty, value); }
         }
 
-        public static readonly DependencyProperty SongNameProperty = DependencyProperty.Register("SongName", typeof(String), typeof(SongItemControlSmall), new PropertyMetadata(""));
+        public static readonly DependencyProperty TimeProperty = DependencyProperty.Register("Time", typeof(String), typeof(SongItemControlSmall), new PropertyMetadata(""));
+
 
         public SongItemControlSmall()
         {
