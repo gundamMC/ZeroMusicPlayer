@@ -13,6 +13,9 @@ namespace ZeroMusicPlayer {
         private WaveOutEvent WavePlayer = new WaveOutEvent();
 
         private ObservableCollection<SongItem> Queue = new ObservableCollection<SongItem>();
+        // currently playing = Queue[0]
+        private ObservableCollection<SongItem> History = new ObservableCollection<SongItem>();
+        private int MaxHistory = 20;
         private int PlayMode { get; set; } = 0;
         // 0 for loop, 1 for shuffle, 2 for single
 
@@ -20,12 +23,13 @@ namespace ZeroMusicPlayer {
 
         private Timer timer = new Timer() { Interval = 100 };
 
-        public MusicPlayer(System.Windows.Controls.ItemsControl queue_panel)
+        public MusicPlayer(System.Windows.Controls.ItemsControl queue_panel, System.Windows.Controls.ItemsControl history_panel)
         {
             WavePlayer.PlaybackStopped += OnPlaybackStopped;
             timer.Elapsed += Timer_Elapsed;
 
             queue_panel.ItemsSource = this.Queue;
+            history_panel.ItemsSource = this.History;
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -134,8 +138,18 @@ namespace ZeroMusicPlayer {
             WavePlayer.Volume = Volume / 100f;
         }
 
+        private void AddHistory(SongItem item)
+        {
+            if (History.Count == MaxHistory)
+                History.RemoveAt(MaxHistory - 1);
+
+            History.Insert(0, item);
+        }
+
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
+            AddHistory(Queue[0]);
+
             if (PlayMode == 0)
             {
                 SongItem tmp = Queue[0];

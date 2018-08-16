@@ -112,7 +112,7 @@
                 <Image Source="pack://siteoforigin:,,,/Resources/close.png" Margin="5"/>
             </Button>
 
-            <TabControl HorizontalAlignment="Left" Height="388" Margin="0,12,0,0" VerticalAlignment="Top" Width="400" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0">
+            <TabControl x:Name="Queue_TabControl" HorizontalAlignment="Left" Height="388" Margin="0,12,0,0" VerticalAlignment="Top" Width="400" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0">
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabPanel}">
                         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -121,11 +121,10 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <Button Content="Queue" Height="20" Width="100" Background="#FFF4F4F4" BorderBrush="#FFDFDFDF"/>
+                        <Button x:Name="Queue_Tab_Button" Content="Queue" Height="20" Width="100" Background="#FFF4F4F4" BorderBrush="#FFDFDFDF" Click="Queue_Tab_Button_Click"/>
                     </TabItem.Header>
                     <Grid Margin="0,12,0,0">
                         <ScrollViewer>
-                            <!--<StackPanel x:Name="Queue_Panel"/>-->
                             <ItemsControl x:Name="Queue_Panel">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -143,9 +142,24 @@
                 </TabItem>
                 <TabItem>
                     <TabItem.Header>
-                        <Button Content="History" Height="20" Width="100" Background="#FFF4F4F4" BorderBrush="#FFDFDFDF"/>
+                        <Button x:Name="History_Tab_Button" Content="History" Height="20" Width="100" Background="#FFF4F4F4" BorderBrush="#FFDFDFDF" Click="History_Tab_Button_Click"/>
                     </TabItem.Header>
-                    <Grid Background="#FFE5E5E5" Margin="0,12,0,0"/>
+                    <Grid Margin="0,12,0,0">
+                        <ScrollViewer>
+                            <ItemsControl x:Name="History_Panel">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:SongItemControlSmall ItemName="{Binding Name}" Time="{Binding Time}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Grid>

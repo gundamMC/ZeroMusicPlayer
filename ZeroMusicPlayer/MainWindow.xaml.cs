@@ -50,7 +50,7 @@ namespace ZeroMusicPlayer
 
             ContentFrame.Navigate(new FilePage());
 
-            Player = new MusicPlayer(Queue_Panel);
+            Player = new MusicPlayer(Queue_Panel, History_Panel);
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -94,6 +94,16 @@ namespace ZeroMusicPlayer
         private void Queue_Button_Click(object sender, RoutedEventArgs e)
         {
             QueueGrid.Visibility = (QueueGrid.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void Queue_Tab_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Queue_TabControl.SelectedIndex = 0;
+        }
+
+        private void History_Tab_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Queue_TabControl.SelectedIndex = 1;
         }
     }
 }
