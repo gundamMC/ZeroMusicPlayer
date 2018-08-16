@@ -85,5 +85,15 @@ namespace ZeroMusicPlayer
         private void CloseButton_Click(object sender, RoutedEventArgs e) {
             App.Current.Shutdown();
         }
+
+        private void QueueClose_Click(object sender, RoutedEventArgs e)
+        {
+            QueueGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void Queue_Button_Click(object sender, RoutedEventArgs e)
+        {
+            QueueGrid.Visibility = (QueueGrid.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+        }
     }
 }
