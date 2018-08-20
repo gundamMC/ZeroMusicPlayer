@@ -75,11 +75,10 @@ namespace ZeroMusicPlayer
                     Player.Resume();
                     break;
                 case -1:
-                    Player.PlayNow(new SongItem() { Name = SelectedItemControl.Name, Path = ((SongItemControl)SelectedItemControl).Path, Time = ((SongItemControl)SelectedItemControl).Time });
+                    Player.PlayNow(new SongItem() { Name = SelectedItemControl.ItemName, Path = ((SongItemControl)SelectedItemControl).Path, Time = ((SongItemControl)SelectedItemControl).Time });
                     break;
             }
 
-            
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) {

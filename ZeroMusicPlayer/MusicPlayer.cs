@@ -87,6 +87,17 @@ namespace ZeroMusicPlayer {
 
         public void PlayNow(SongItem song)
         {
+            // skip the current song
+            if (PlayMode == 0)
+            {
+                SongItem tmp = Queue[0];
+                Queue.RemoveAt(0);
+                Queue.Add(tmp);
+            }
+
+            // make the new song as the first one
+            Queue.Insert(0, song);
+
             WavePlay(song.Path);
         }
 
