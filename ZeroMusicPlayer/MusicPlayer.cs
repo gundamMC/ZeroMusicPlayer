@@ -6,7 +6,7 @@ using System.Linq;
 using System.Timers;
 
 namespace ZeroMusicPlayer {
-    class MusicPlayer
+    public class MusicPlayer
     {
 
         private AudioFileReader AudioFile;
@@ -15,7 +15,7 @@ namespace ZeroMusicPlayer {
         private ObservableCollection<SongItem> Queue = new ObservableCollection<SongItem>();
         // currently playing = Queue[0]
         private ObservableCollection<SongItem> History = new ObservableCollection<SongItem>();
-        private int MaxHistory = 20;
+        private readonly int MaxHistory;
         private int PlayMode { get; set; } = 0;
         // 0 for loop, 1 for shuffle, 2 for single
 
@@ -30,6 +30,8 @@ namespace ZeroMusicPlayer {
 
             queue_panel.ItemsSource = this.Queue;
             history_panel.ItemsSource = this.History;
+
+            MaxHistory = 20;
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -191,5 +193,6 @@ namespace ZeroMusicPlayer {
                     return -1;
             }
         }
+
     }
 }

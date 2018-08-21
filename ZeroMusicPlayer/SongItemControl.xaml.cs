@@ -43,7 +43,7 @@ namespace ZeroMusicPlayer
 
         private void SongItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ((MainWindow)App.Current.MainWindow).AddSong(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
+            App.Player.PlayNow(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
         }
 
 
