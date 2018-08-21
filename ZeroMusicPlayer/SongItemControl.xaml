@@ -23,6 +23,12 @@
         </Style>
     </UserControl.Resources>
 
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            
+        </ContextMenu>
+    </UserControl.ContextMenu>
+
     <Grid>
         <Rectangle Fill="#FFEBECED" HorizontalAlignment="Left" Height="2" VerticalAlignment="Bottom" Width="750" StrokeThickness="0"/>
         <Label Content="{Binding Path=ItemName, ElementName=SongItem}" HorizontalAlignment="Left" Height="30" Margin="100,0,0,0" VerticalAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="#FF616161"/>

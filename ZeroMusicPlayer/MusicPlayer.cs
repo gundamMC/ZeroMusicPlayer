@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Timers;
 
@@ -16,8 +17,11 @@ namespace ZeroMusicPlayer {
         // currently playing = Queue[0]
         private ObservableCollection<SongItem> History = new ObservableCollection<SongItem>();
         private readonly int MaxHistory;
-        private int PlayMode { get; set; } = 0;
-        // 0 for loop, 1 for shuffle, 2 for single
+
+        public const int PLAYMODE_LOOP = 0;
+        public const int PLAYMODE_SHUFFLE = 1;
+        public const int PLAYMODE_SINGLE = 2;
+        private int PlayMode { get; set; } = PLAYMODE_LOOP;
 
         private Boolean StoppedByUser = false;
 
@@ -89,18 +93,22 @@ namespace ZeroMusicPlayer {
 
         public void PlayNow(SongItem song)
         {
-            // skip the current song
-            if (PlayMode == 0)
-            {
-                SongItem tmp = Queue[0];
-                Queue.RemoveAt(0);
-                Queue.Add(tmp);
-            }
-
             // make the new song as the first one
             Queue.Insert(0, song);
 
+            // skip the current song
+            if (PlayMode == PLAYMODE_LOOP && Queue.Count > 2)
+            {
+                //Queue.Move(1, Queue.Count - 1);
+            }
+
+            for (int i = 0; i < Queue.Count; i++)
+                Console.WriteLine(i + " - " + Queue[i].Name);
+
+            Console.WriteLine(" -- ");
+
             WavePlay(song.Path);
+
         }
 
         private SongItem GetNext()
