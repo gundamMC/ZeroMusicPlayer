@@ -70,11 +70,13 @@ namespace ZeroMusicPlayer {
             }
         }
 
-        private void WavePlay(String path)
+        private void WavePlay(SongItem song)
         {
             StopPlayBack();
 
-            AudioFile = new AudioFileReader(path);
+            AddHistory(song);
+
+            AudioFile = new AudioFileReader(song.Path);
 
             WavePlayer.Init(AudioFile);
             WavePlayer.Play();
@@ -84,31 +86,28 @@ namespace ZeroMusicPlayer {
 
         public void PlayNext()
         {
+
             if (Queue.Count() < 1)
                 return;
 
             SongItem song = GetNext();
-            WavePlay(song.Path);
+            WavePlay(song);
         }
 
         public void PlayNow(SongItem song)
         {
-            // make the new song as the first one
-            Queue.Insert(0, song);
+            WavePlay(song);
 
-            // skip the current song
-            if (PlayMode == PLAYMODE_LOOP && Queue.Count > 2)
-            {
-                //Queue.Move(1, Queue.Count - 1);
-            }
+            // make the new song as the first one
+            if (Queue.Contains(song))
+                Queue.Move(Queue.IndexOf(song), 0);
+            else
+                Queue.Insert(0, song);
 
             for (int i = 0; i < Queue.Count; i++)
                 Console.WriteLine(i + " - " + Queue[i].Name);
 
             Console.WriteLine(" -- ");
-
-            WavePlay(song.Path);
-
         }
 
         private SongItem GetNext()
@@ -119,12 +118,20 @@ namespace ZeroMusicPlayer {
             switch (PlayMode)
             {
                 case 0:
-                    return Queue.First();
+                    if(Queue.Count > 1)
+                    {
+                        // since .Move cannot move to the last index
+                        // (learned this the hard way)
+                        SongItem tmp = Queue[0];
+                        Queue.RemoveAt(0);
+                        Queue.Add(tmp);
+                    }
+                    return Queue[0];
                 case 1:
                     int rnd = new Random().Next(0, Queue.Count());
                     return Queue.ElementAt(rnd);
                 case 2:
-                    return Queue.First();
+                    return Queue[0];
             }
 
             return null;
@@ -149,9 +156,9 @@ namespace ZeroMusicPlayer {
         public void Add(SongItem song)
         {
             if (Queue.Contains(song))
-                return;
-
-            Queue.Add(song);
+                Queue.Move(Queue.IndexOf(song), 0);
+            else
+                Queue.Add(song);
         }
 
         public void SetVolume(int Volume)
@@ -164,20 +171,15 @@ namespace ZeroMusicPlayer {
             if (History.Count == MaxHistory)
                 History.RemoveAt(MaxHistory - 1);
 
+            if (History.Contains(item))
+                History.Remove(item);
+
             History.Insert(0, item);
         }
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
-            AddHistory(Queue[0]);
-
-            if (PlayMode == 0)
-            {
-                SongItem tmp = Queue[0];
-                Queue.RemoveAt(0);
-                Queue.Add(tmp);
-            }
-
+            
             if (StoppedByUser)
             {
                 // don't automatically play the next song if it is manually stopped
@@ -200,6 +202,13 @@ namespace ZeroMusicPlayer {
                 default:
                     return -1;
             }
+        }
+
+        public void Dispose()
+        {
+            timer?.Dispose();
+            WavePlayer?.Dispose();
+            AudioFile?.Dispose();
         }
 
     }

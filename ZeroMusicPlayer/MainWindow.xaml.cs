@@ -76,6 +76,7 @@ namespace ZeroMusicPlayer
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) {
+            App.Player.Dispose();
             App.Current.Shutdown();
         }
 
