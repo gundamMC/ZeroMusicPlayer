@@ -1,18 +1,7 @@
-﻿using Microsoft.WindowsAPICodePack.Shell;
-using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using ZeroMusicPlayer.Model;
 
 namespace ZeroMusicPlayer
 {
@@ -32,6 +21,9 @@ namespace ZeroMusicPlayer
             SelectedItemControl = control;
         }
 
+        // Pages
+        private FilePage filePage = new FilePage();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -42,7 +34,8 @@ namespace ZeroMusicPlayer
                 new PathMessageBox().ShowDialog();
             }
 
-            ContentFrame.Navigate(new FilePage());
+            // default file page
+            ContentFrame.Navigate(filePage);
 
             App.Player = new MusicPlayer(Queue_Panel, History_Panel);
         }

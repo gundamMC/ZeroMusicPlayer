@@ -39,8 +39,7 @@
     <Grid>
 
         <Frame x:Name="ContentFrame" HorizontalAlignment="Left" Height="550" Margin="250,50 ,0,0" VerticalAlignment="Top" Width="750"/>
-
-
+        
         <!--<TreeView x:Name="Files" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding}" FontFamily="Arial" BorderThickness="0" Background="White" Foreground="#FF9E9E9E" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItemChanged="Files_SelectedItemChanged" Padding="0" Margin="0,278,0,0">
 
             <TreeView.Resources>

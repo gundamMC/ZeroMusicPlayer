@@ -43,7 +43,8 @@ namespace ZeroMusicPlayer
 
         private void SongItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            App.Player.PlayNow(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
+            if (e.ChangedButton == MouseButton.Left)
+                App.Player.PlayNow(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
         }
 
 
