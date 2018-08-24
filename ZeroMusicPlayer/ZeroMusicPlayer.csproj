@@ -74,6 +74,7 @@
     <Compile Include="AddressBarButton.xaml.cs">
       <DependentUpon>AddressBarButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DwmDropShadow.cs" />
     <Compile Include="FilePage.xaml.cs">
       <DependentUpon>FilePage.xaml</DependentUpon>
     </Compile>

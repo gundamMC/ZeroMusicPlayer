@@ -210,5 +210,11 @@ namespace ZeroMusicPlayer
             }
 
         }
+
+        private void Return_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (AddressPanel.Children.Count > 2)
+                Explore(((AddressBarButton)AddressPanel.Children[AddressPanel.Children.Count - 2]).Dir, AddressPanel.Children.Count - 1);
+        }
     }
 }

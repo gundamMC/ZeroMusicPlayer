@@ -27,6 +27,7 @@ namespace ZeroMusicPlayer
         public MainWindow()
         {
             InitializeComponent();
+            DwmDropShadow.DropShadowToWindow(this);
 
             if (String.IsNullOrWhiteSpace(Properties.Settings.Default.DirectoryPath) || 
                 !Directory.Exists(Properties.Settings.Default.DirectoryPath))
