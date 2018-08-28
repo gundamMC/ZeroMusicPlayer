@@ -26,23 +26,23 @@
 
     <UserControl.ContextMenu>
         <ContextMenu BorderThickness="1" Background="White" Padding="0">
-            <MenuItem Header="Play" Background="White" Height="30" FontSize="12">
+            <MenuItem x:Name="Play_MenuItem" Header="Play" Background="White" Height="30" FontSize="12" Click="Play_MenuItem_Click">
                 <MenuItem.Icon>
                     <Image Source="Resources/play.png"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Add to queue (next)" Background="White" Height="30" FontSize="12">
+            <MenuItem x:Name="AddNext_MenuItem" Header="Add to queue (next)" Background="White" Height="30" FontSize="12" Click="AddNext_MenuItem_Click">
                 <MenuItem.Icon>
                     <Image Source="Resources/play.png"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Add to queue (last)" Background="White" Height="30" FontSize="12">
+            <MenuItem x:Name="AddQueue_MenuItem" Header="Add to queue (last)" Background="White" Height="30" FontSize="12" Click="AddQueue_MenuItem_Click">
                 <MenuItem.Icon>
                     <Image Source="Resources/play.png"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
-            <MenuItem Header="Delete" Background="White" Height="30" FontSize="12">
+            <MenuItem x:Name="Delete_MenuItem" Header="Delete" Background="White" Height="30" FontSize="12">
                 <MenuItem.Icon>
                     <Image Source="Resources/play.png"/>
                 </MenuItem.Icon>

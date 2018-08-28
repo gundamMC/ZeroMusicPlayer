@@ -161,6 +161,14 @@ namespace ZeroMusicPlayer {
                 Queue.Add(song);
         }
 
+        public void AddNext(SongItem song)
+        {
+            if (Queue.Contains(song))
+                Queue.Move(Queue.IndexOf(song), 1);
+            else
+                Queue.Insert(1, song);
+        }
+
         public void SetVolume(int Volume)
         {
             WavePlayer.Volume = Volume / 100f;

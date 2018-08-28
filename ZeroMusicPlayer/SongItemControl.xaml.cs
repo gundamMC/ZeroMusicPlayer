@@ -52,5 +52,20 @@ namespace ZeroMusicPlayer
         {
             ((MainWindow)App.Current.MainWindow).SetSelectedItemControl(this);
         }
+
+        private void Play_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            App.Player.PlayNow(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
+        }
+
+        private void AddNext_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            App.Player.AddNext(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
+        }
+
+        private void AddQueue_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            App.Player.Add(new SongItem() { Name = ItemName, Path = this.Path, Time = this.Time });
+        }
     }
 }
